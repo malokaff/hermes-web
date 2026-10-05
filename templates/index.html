@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes Agent - Web Interface</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦾</text></svg>">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <span class="logo">🦾</span>
+                <div>
+                    <h1>Hermes Agent</h1>
+                    <span class="subtitle">Web Interface</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div id="health-status" class="health-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Checking...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Mode selector -->
+            <div class="mode-tabs">
+                <button class="tab-btn active" data-mode="oneshot" onclick="switchMode('oneshot')">
+                    <span class="tab-icon">⚡</span>
+                    One-Shot
+                </button>
+                <button class="tab-btn" data-mode="stream" onclick="switchMode('stream')">
+                    <span class="tab-icon">📡</span>
+                    Stream
+                </button>
+                <button class="tab-btn" data-mode="info" onclick="switchMode('info')">
+                    <span class="tab-icon">ℹ️</span>
+                    Info
+                </button>
+            </div>
+
+            <!-- One-Shot mode -->
+            <div id="oneshot-mode" class="mode-panel active">
+                <div class="command-form">
+                    <div class="form-group">
+                        <label for="prompt-input">Prompt</label>
+                        <textarea id="prompt-input" placeholder="Ask Hermes anything... (e.g., 'What tools are available?', 'Help me debug my code')" rows="3"></textarea>
+                        <button class="btn btn-primary btn-full" onclick="executeOneshot()">
+                            <span class="btn-icon">⚡</span> Execute
+                        </button>
+                    </div>
+                </div>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-title">Response</span>
+                        <button class="btn-icon-small" onclick="clearOutput('oneshot-output')">Clear</button>
+                    </div>
+                    <div class="terminal-output" id="oneshot-output">
+                        <div class="welcome-message">
+                            <p>⚡ One-shot mode</p>
+                            <p class="hint">Enter a prompt above and press Execute. Hermes will run with <code>-z</code> flag and print only the final response.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stream mode -->
+            <div id="stream-mode" class="mode-panel">
+                <div class="command-form">
+                    <div class="form-group">
+                        <label for="stream-prompt">Prompt</label>
+                        <textarea id="stream-prompt" placeholder="Ask Hermes anything..." rows="3"></textarea>
+                        <button class="btn btn-primary btn-full" onclick="executeStream()" id="stream-btn">
+                            <span class="btn-icon">📡</span> Start Streaming
+                        </button>
+                        <button class="btn btn-danger btn-full" onclick="stopStream()" id="stop-stream-btn" style="display:none;">
+                            <span class="btn-icon">⏹</span> Stop
+                        </button>
+                    </div>
+                </div>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-title">Live Output</span>
+                        <div>
+                            <span id="stream-status" class="stream-status">—</span>
+                            <button class="btn-icon-small" onclick="clearOutput('stream-output')">Clear</button>
+                        </div>
+                    </div>
+                    <div class="terminal-output" id="stream-output">
+                        <div class="welcome-message">
+                            <p>📡 Stream mode</p>
+                            <p class="hint">See real-time output as Hermes processes your request.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info mode -->
+            <div id="info-mode" class="mode-panel">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-title">Hermes Information</span>
+                        <button class="btn btn-primary" onclick="loadInfo()">Refresh</button>
+                    </div>
+                    <div class="terminal-output" id="info-output">
+                        <div class="welcome-message">
+                            <p>ℹ️ Click "Refresh" to load Hermes information</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span>Hermes Agent Web Interface v0.1.0</span>
+            <span>•</span>
+            <span id="footer-hermes">Hermes: —</span>
+            <span>•</span>
+            <span>Podman Container</span>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+"""Hermes Web Interface - A web UI for Hermes CLI."""
