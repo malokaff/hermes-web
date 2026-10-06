@@ -1,30 +1,31 @@
 # Hermes Web — Podman container
-# Multi-stage: Python backend serves both API proxy + static frontend
+# Base: python:3.14-slim (matches compiled packages in site-packages/)
+#
+# Online build:  podman build -t hermes-web .
+# Offline build: podman build --no-cache -t hermes-web .  (use with pre-saved site-packages/)
+#
+# For offline builds, pre-pull the base image when online:
+#   podman pull python:3.14-slim
 
-FROM python:3.12-slim AS builder
-
-WORKDIR /app
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
-
-FROM python:3.12-slim
-
-# Add root CA certs for HTTPS
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+FROM python:3.14-slim
 
 WORKDIR /app
-COPY --from=builder /install /usr/local
 
-# Copy backend + frontend
+# Copy Python packages first (biggest layer, changes least often)
+COPY site-packages/ /usr/local/lib/python3.14/site-packages/
+
+# Copy application code
 COPY backend/main.py .
 COPY frontend/ ./frontend/
 
-# Env vars (can be overridden via --env or docker-compose)
-ENV HERMES_API_URL=http://host.containers.internal:8642
+# Environment
 ENV PORT=8000
+ENV HERMES_API_URL=http://host.containers.internal:8642
 
-# Expose
 EXPOSE 8000
 
-# Run
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/health')" || exit 1
+
 CMD ["python", "main.py"]

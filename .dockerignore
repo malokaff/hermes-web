@@ -1,0 +1,43 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv
+.venv
+env
+.env
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docs
+*.md
+LICENSE
+NOTICE
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.tar
+*.tar.gz
+*.whl
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hermes-web local symlinks
+backend/frontend
+backend/__pycache__
+site-packages/
